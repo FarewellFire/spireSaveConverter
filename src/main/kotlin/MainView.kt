@@ -2,6 +2,9 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Insets
 import javafx.stage.FileChooser
 import tornadofx.*
+import java.awt.Desktop
+import java.net.URI
+
 
 class MainView: View("Slay The Spire Save Converter") {
     val savePath = SimpleStringProperty(this, "savePath", config.string("savePath"))
@@ -24,10 +27,7 @@ class MainView: View("Slay The Spire Save Converter") {
                         val file = fileChooser.showOpenDialog(null)
                         savePath.value = file?.absolutePath
 
-                        with(config) {
-                            set("savePath" to savePath.value)
-                            save()
-                        }
+                        saveConfig()
                     }
                 }
                 chooseSaveBtn.padding = Insets(10.0, 25.0, 10.0, 36.0)
@@ -45,10 +45,7 @@ class MainView: View("Slay The Spire Save Converter") {
                         val file = fileChooser.showOpenDialog(null)
                         jsonPath.value = file?.absolutePath
 
-                        with(config) {
-                            set("jsonPath" to jsonPath.value)
-                            save()
-                        }
+                        saveConfig()
                     }
                 }
                 chooseOutputBtn.padding = Insets(10.0, 25.0, 10.0, 25.0)
@@ -60,7 +57,7 @@ class MainView: View("Slay The Spire Save Converter") {
             val saveToJsonBtn = button("Convert save to JSON") {
                 action {
                     saveToJson(savePath.value, jsonPath.value)
-                    SaveConfig()
+                    saveConfig()
                 }
             }
             saveToJsonBtn.padding = Insets(10.0)
@@ -68,14 +65,20 @@ class MainView: View("Slay The Spire Save Converter") {
             val jsonToSaveBtn = button("Convert JSON to save") {
                 action {
                     jsonToSave(savePath.value, jsonPath.value)
-                    SaveConfig()
+                    saveConfig()
                 }
             }
             jsonToSaveBtn.padding = Insets(10.0)
+
+
+        }
+
+        hyperlink("View this project on GitHub").action {
+            Desktop.getDesktop().browse(URI("https://github.com/DeanUA/spireSaveConverter"))
         }
     }
 
-    fun SaveConfig()
+    private fun saveConfig()
     {
         with(config) {
             set("savePath" to savePath.value)

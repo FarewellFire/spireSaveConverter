@@ -1,3 +1,4 @@
 ﻿build/
 out/artifacts/SlayTheSpireSaveConverter_main_jar/
 conf/
+.gradle
